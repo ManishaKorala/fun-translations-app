@@ -7,6 +7,7 @@ const fromDto = (apiResponse: any): Translation => {
   // Return a clean domain object
   return {
     text: contents.text,
+    translated: contents.translated,
     engine: contents.translation as Engine,
   };
 };
