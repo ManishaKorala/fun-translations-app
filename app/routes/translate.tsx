@@ -4,7 +4,7 @@ import Content from "view/components/Content";
 import Sidepane from "view/components/Sidepane";
 import { createDefaultFunTranslationService } from "io/service/FunTranslationService";
 import { useActionData } from "react-router";
-import type { Translation } from "domain/types/Translation";
+import type { TranslationResult } from "domain/types/TranslationResult";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -14,10 +14,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-// Define the return type of the action
-type TranslateActionResult = Translation | { error: string };
-
-export const action = async ({ request }: Route.ActionArgs): Promise<TranslateActionResult> => {
+export const action = async ({ request }: Route.ActionArgs): Promise<TranslationResult> => {
   if (request.method !== "POST") {
     throw new Response("Method Not Allowed", { status: 405 });
   }
@@ -43,7 +40,7 @@ export const action = async ({ request }: Route.ActionArgs): Promise<TranslateAc
 };
 
 export default function Translate() {
-  const data = useActionData<TranslateActionResult>();
+  const data = useActionData<TranslationResult>();
 
   // check if data has 'error' property
   const isError = data && "error" in data;
