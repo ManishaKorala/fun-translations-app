@@ -6,7 +6,7 @@ export function TranslateForm() {
     <form className="contents" method="POST" action="/translate">
       <fieldset className="flex flex-col items-start gap-6">
         {/* implement translation engine here */}
-        <Input placeholder="Enter the text to translate here" />
+        <Input name="text" placeholder="Enter the text to translate here" />
         <Button type="submit">Translate</Button>
       </fieldset>
     </form>

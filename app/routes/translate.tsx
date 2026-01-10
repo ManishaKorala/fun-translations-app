@@ -7,15 +7,27 @@ import { useActionData } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Fun Translator - Yoda & More" },
+    { name: "description", content: "Translate text into Yoda speak, Pirate, and more!" },
   ];
 }
 
-export const action = async ({ request }) => {
+export const action = async ({ request }: Route.ActionArgs) => {
+  console.log('testing data: ', request)
+  if (request.method !== "POST") {
+    throw new Response("Method Not Allowed", { status: 405 });
+  }
+
+  // Extract form data from the request
+  const formData = await request.formData();
+  const textToTranslate = formData.get("text") as string;
+
+  if (!textToTranslate || textToTranslate.trim() === "") {
+    return { error: "Please enter some text to translate" };
+  }
+
   const translationService = createDefaultFunTranslationService();
-  const translation = await translationService.getTranslation("placeholder");
-  // should I do something with that request?
+  const translation = await translationService.getTranslation(textToTranslate);
 
   return translation;
 };

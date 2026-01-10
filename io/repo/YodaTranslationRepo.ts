@@ -1,19 +1,15 @@
 class YodaTranslationRepo {
   async getTranslation(text: string) {
-    // const response = await fetch(
-    //   "https://api.funtranslations.com/translate/yoda.json",
-    //   { method: "POST", body: JSON.stringify({ text }) }
-    // );
-    //
-    // return response;
-
     const json = await import(
       "../mocks/api.funtranslations.com_translate_yoda.json.json"
     );
 
+    // Extract the default JSON object
+    const mockData = json.default;
+
     return Promise.resolve({
       json() {
-        return json;
+        return Promise.resolve(mockData);
       },
     });
   }

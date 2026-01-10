@@ -1,5 +1,6 @@
 import type { Translation } from "domain/types/Translation";
 import YodaTranslationRepo from "../repo/YodaTranslationRepo";
+import { fromDto } from "../codec/fun-translation";
 
 interface FunTranslationService {
   getTranslation(text: string): Translation;
@@ -16,7 +17,7 @@ class DefaultFunTranslationService implements FunTranslationService {
     const response = await this.repo.getTranslation(text);
     const payload = await response.json();
 
-    return payload as Translation;
+    return fromDto(payload);
   }
 }
 
