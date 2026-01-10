@@ -2,9 +2,9 @@ import type { Route } from "./+types/translate";
 import { TranslateForm } from "../translate/form";
 import Content from "view/components/Content";
 import Sidepane from "view/components/Sidepane";
-import { createDefaultFunTranslationService } from "io/service/FunTranslationService";
 import { useActionData } from "react-router";
 import type { TranslationResult } from "domain/types/TranslationResult";
+import { getTranslationService } from "io/service/translationServiceSingleton";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -14,7 +14,9 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export const action = async ({ request }: Route.ActionArgs): Promise<TranslationResult> => {
+type TranslateActionResult = TranslationResult;
+
+export const action = async ({ request }: Route.ActionArgs): Promise<TranslateActionResult> => {
   if (request.method !== "POST") {
     throw new Response("Method Not Allowed", { status: 405 });
   }
@@ -28,7 +30,7 @@ export const action = async ({ request }: Route.ActionArgs): Promise<Translation
   }
 
   try {
-    const translationService = createDefaultFunTranslationService();
+    const translationService = getTranslationService();
     const translation = await translationService.getTranslation(textToTranslate);    
     return translation;
   } catch (error) {
@@ -40,7 +42,7 @@ export const action = async ({ request }: Route.ActionArgs): Promise<Translation
 };
 
 export default function Translate() {
-  const data = useActionData<TranslationResult>();
+  const data = useActionData<TranslateActionResult>();
 
   // check if data has 'error' property
   const isError = data && "error" in data;

@@ -1,9 +1,11 @@
 import type { Translation } from "domain/types/Translation";
+import type { Engine } from "domain/types/Engine";
 import YodaTranslationRepo from "../repo/YodaTranslationRepo";
 import { fromDto } from "../codec/fun-translation";
+import { CacheService } from "./CacheService";
 
 interface FunTranslationService {
-  getTranslation(text: string): Translation;
+  getTranslation(text: string, engine?: Engine): Promise<Translation>;
 }
 
 class DefaultFunTranslationService implements FunTranslationService {
@@ -13,7 +15,7 @@ class DefaultFunTranslationService implements FunTranslationService {
     this.repo = repo;
   }
 
-  async getTranslation(text: string) {
+  async getTranslation(text: string, engine: Engine = "yoda") {
     const response = await this.repo.getTranslation(text);
     const payload = await response.json();
 
@@ -24,8 +26,11 @@ class DefaultFunTranslationService implements FunTranslationService {
 const createDefaultFunTranslationService = () => {
   const yodaRepo = new YodaTranslationRepo();
   const service = new DefaultFunTranslationService(yodaRepo);
-
-  return service;
+  
+  // Wrap with cache
+  const cachedService = new CacheService(service);
+  
+  return cachedService;
 };
 
-export { DefaultFunTranslationService, createDefaultFunTranslationService };
+export { DefaultFunTranslationService, createDefaultFunTranslationService, CacheService };
