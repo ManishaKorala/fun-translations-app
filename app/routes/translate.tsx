@@ -5,6 +5,7 @@ import Sidepane from "view/components/Sidepane";
 import { useActionData } from "react-router";
 import type { TranslationResult } from "domain/types/TranslationResult";
 import { getTranslationService } from "io/service/translationServiceSingleton";
+import type { Engine } from "domain/types/Engine";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -24,6 +25,7 @@ export const action = async ({ request }: Route.ActionArgs): Promise<TranslateAc
   // Extract form data from the request
   const formData = await request.formData();
   const textToTranslate = formData.get("text") as string;
+  const engine = (formData.get("engine") as Engine) || "yoda";
 
   if (!textToTranslate || textToTranslate.trim() === "") {
     return { error: "Please enter some text to translate" };
@@ -31,7 +33,7 @@ export const action = async ({ request }: Route.ActionArgs): Promise<TranslateAc
 
   try {
     const translationService = getTranslationService();
-    const translation = await translationService.getTranslation(textToTranslate);    
+    const translation = await translationService.getTranslation(textToTranslate, engine);    
     return translation;
   } catch (error) {
     console.error("Translation error:", error);
