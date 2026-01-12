@@ -67,7 +67,7 @@ export default function Translate() {
   const isSuccess = data && "translated" in data;
 
   return (
-    <div className="flex h-full py-3">
+    <div className="grid grid-cols-[280px_1fr] h-full py-3 gap-4">
       <Sidepane>
         <TranslationHistoryList />
       </Sidepane>
