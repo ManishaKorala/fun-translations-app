@@ -1,17 +1,16 @@
 class YodaTranslationRepo {
+  private baseUrl = "https://api.funtranslations.com/translate/yoda.json";
+
   async getTranslation(text: string) {
-    const json = await import(
-      "../mocks/api.funtranslations.com_translate_yoda.json.json"
+    const response = await fetch(
+      `${this.baseUrl}?text=${encodeURIComponent(text)}`
     );
 
-    // Extract the default JSON object
-    const mockData = json.default;
+    if (!response.ok) {
+      throw new Error(`Yoda translation failed: ${response.statusText}`);
+    }
 
-    return Promise.resolve({
-      json() {
-        return Promise.resolve(mockData);
-      },
-    });
+    return response;
   }
 }
 
