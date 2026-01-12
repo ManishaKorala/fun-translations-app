@@ -46,6 +46,13 @@ Cheers, the Xayn/Noxtua team.
 
 ## Getting Started
 
+## Testing
+
+Run the test suite:
+
+```bash
+npm test                    # Run tests
+
 ### Installation
 
 Install the dependencies:
