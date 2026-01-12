@@ -2,10 +2,13 @@ import type { Route } from "./+types/translate";
 import { TranslateForm } from "../translate/form";
 import Content from "view/components/Content";
 import Sidepane from "view/components/Sidepane";
+import TranslationHistoryList from "view/components/TranslationHistoryList";
 import { useActionData } from "react-router";
 import type { TranslationResult } from "domain/types/TranslationResult";
 import { getTranslationService } from "io/service/translationServiceSingleton";
 import type { Engine } from "domain/types/Engine";
+import { useTranslationHistory } from "view/context/TranslationHistoryContext";
+import { useEffect } from "react";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -45,6 +48,17 @@ export const action = async ({ request }: Route.ActionArgs): Promise<TranslateAc
 
 export default function Translate() {
   const data = useActionData<TranslateActionResult>();
+  const { addToHistory } = useTranslationHistory();
+  
+  useEffect(() => {
+  if (data && "translated" in data) {
+    addToHistory({
+      text: data.text,
+      translated: data.translated,
+      engine: data.engine,
+    });
+  }
+  }, [data, addToHistory]);
 
   // check if data has 'error' property
   const isError = data && "error" in data;
@@ -54,7 +68,9 @@ export default function Translate() {
 
   return (
     <div className="flex h-full py-3">
-      <Sidepane>It would be nice to see past translations here.</Sidepane>
+      <Sidepane>
+        <TranslationHistoryList />
+      </Sidepane>
       <Content>
         <TranslateForm />
         

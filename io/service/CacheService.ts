@@ -6,7 +6,7 @@ import type { Engine } from "domain/types/Engine";
  * to avoid repeated API calls for the same text+engine combination
  */
 interface FunTranslationService {
-  getTranslation(text: string): Promise<Translation>;
+  getTranslation(text: string, engine?: Engine): Promise<Translation>;
 }
 
 class CacheService implements FunTranslationService {
@@ -33,7 +33,7 @@ class CacheService implements FunTranslationService {
     
     // Not in cache, fetch from service
     console.log(`[Cache MISS] ${cacheKey} - fetching from API`);
-    const translation = await this.translationService.getTranslation(text);
+    const translation = await this.translationService.getTranslation(text, engine);
     
     // Store in cache for next time
     this.cache.set(cacheKey, translation);

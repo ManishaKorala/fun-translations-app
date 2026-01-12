@@ -24,7 +24,7 @@ class DefaultFunTranslationService implements FunTranslationService {
     const response = await repo.getTranslation(text);
     const payload = await response.json();
     
-    return fromDto(payload);
+    return fromDto(payload, engine);
   }
 
   private selectRepo(engine: Engine) {
